@@ -1,0 +1,52 @@
+[
+  {
+    "brand": "SINOON",
+    "url": "https://sinoon.co.kr/product/list.html?cate_no=655",
+    "status": "sale",
+    "sale_type": null,
+    "matched_keyword": "SEASON",
+    "members_only": false,
+    "max_discount_hint": 70,
+    "checked_at": "2026-01-21T03:17:16.829695+00:00"
+  },
+  {
+    "brand": "ASURA",
+    "url": "https://s2asuras2.com/59",
+    "status": "sale",
+    "sale_type": null,
+    "matched_keyword": "SEASON OFF",
+    "members_only": true,
+    "max_discount_hint": 90,
+    "checked_at": "2026-01-21T03:17:18.703198+00:00"
+  },
+  {
+    "brand": "PLZ PROJECT",
+    "url": "https://plzproject.kr/product/list.html?cate_no=309",
+    "status": "sale",
+    "sale_type": "season_off",
+    "matched_keyword": "SALE",
+    "members_only": false,
+    "max_discount_hint": 70,
+    "checked_at": "2026-01-21T03:17:20.112245+00:00"
+  },
+  {
+    "brand": "KHAKI POINT",
+    "url": "https://khakipoint.kr/product/list.html?cate_no=79",
+    "status": "sale",
+    "sale_type": "clearance",
+    "matched_keyword": "CLEARANCE",
+    "members_only": false,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-21T03:17:21.615478+00:00"
+  },
+  {
+    "brand": "NOT YOUR ROSE",
+    "url": "https://notyourrose.com/product/list.html?cate_no=210",
+    "status": "sale",
+    "sale_type": "refurb",
+    "matched_keyword": "REFURB",
+    "members_only": true,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-21T03:17:22.964348+00:00"
+  }
+]
