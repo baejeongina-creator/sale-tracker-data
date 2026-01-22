@@ -1,44 +1,26 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import csv
 import json
 import re
-import time
+import sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Tuple, Optional, Dict, Any
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
-import yaml
 from bs4 import BeautifulSoup
 
-OUT_DIR = Path("outputs")
-OUT_DIR.mkdir(exist_ok=True)
+ROOT = Path(__file__).resolve().parent
+OUTPUT_DIR = ROOT / "outputs"
+OUTPUT_DIR.mkdir(exist_ok=True)
+OUT_JSON = OUTPUT_DIR / "sales.json"
 
-USER_AGENT = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
-)
-
-COMMON_SALE_KEYWORDS = [
-    "SALE", "SEASON OFF", "OFF", "CLEARANCE", "OUTLET", "DISCOUNT",
-    "PROMOTION", "EVENT", "UP TO", "FINAL SALE",
-    "세일", "시즌오프", "클리어런스", "아울렛", "할인", "프로모션", "이벤트",
-    "최대", "특가", "타임세일", "쿠폰", "기획전",
-    "%", "원",
-]
-
-SALE_TYPE_RULES = [
-    ("refurb", ["REFURB", "리퍼브", "B-GRADE", "B GRADE", "B급", "리퍼", "REWORK", "RE:"]),
-    ("clearance", ["CLEARANCE", "클리어런스", "OUTLET", "아울렛", "FINAL SALE", "파이널"]),
-    ("season_off", ["SEASON OFF", "시즌오프"]),
-    ("members_only", ["MEMBERS ONLY", "회원전용", "회원 전용", "회원공개", "회원 공개", "로그인 후", "로그인"]),
-    ("sale", ["SALE", "세일", "할인"]),
-]
-
-MEMBERS_PATTERNS = [
-    r"MEMBERS\s*ONLY",
-    r"회원\s*전용",
-    r"회원\s*공개",
-    r"회원만",
-    r"로그인\s*후",
+DEFAULT_KEYWORDS = [
+    "SALE", "세일", "SEASON", "SEASON OFF", "OFF", "할인", "%", "CLEARANCE", "클리어런스",
+    "REFURB", "리퍼브", "B-GRADE", "B GRADE", "아울렛", "OUTLET", "EVENT", "UP TO", "최대", "회원", "MEMBERS"
 ]
 
 UPTO_PATTERNS = [
@@ -47,62 +29,73 @@ UPTO_PATTERNS = [
     r"(\d{1,2})\s*%\s*OFF",
 ]
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123 Safari/537.36"
+}
 
-def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+TIMEOUT = 25
 
 
-def load_brands() -> List[Dict[str, Any]]:
-    with open("config.yaml", "r", encoding="utf-8") as f:
-        cfg = yaml.safe_load(f) or {}
-    brands = cfg.get("brands", [])
-    if not isinstance(brands, list):
-        raise ValueError("config.yaml 형식 오류: brands는 리스트여야 함")
+@dataclass
+class Brand:
+    name: str
+    url: str
+    country: str = "KR"  # "KR" or "GL" etc.
+    sale_type_hint: str = ""
+    keywords_extra: str = ""  # pipe-separated regex tokens
+
+
+def load_brands_csv(path: Path) -> List[Brand]:
+    if not path.exists():
+        raise FileNotFoundError(f"brands.csv not found: {path}")
+
+    brands: List[Brand] = []
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            name = (row.get("name") or "").strip()
+            url = (row.get("url") or "").strip()
+            if not name or not url:
+                continue
+            brands.append(
+                Brand(
+                    name=name,
+                    url=url,
+                    country=(row.get("country") or "KR").strip() or "KR",
+                    sale_type_hint=(row.get("sale_type_hint") or "").strip(),
+                    keywords_extra=(row.get("keywords_extra") or "").strip(),
+                )
+            )
     return brands
 
 
-def fetch_html(url: str) -> str:
-    r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=25)
+def fetch_text(url: str) -> str:
+    r = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
     r.raise_for_status()
-    return r.text
+    html = r.text
+    soup = BeautifulSoup(html, "html.parser")
 
-
-def extract_text(html: str) -> str:
-    soup = BeautifulSoup(html, "lxml")
+    # remove scripts/styles
     for tag in soup(["script", "style", "noscript"]):
         tag.decompose()
-    text = soup.get_text(separator=" ", strip=True)
-    return re.sub(r"\s+", " ", text)
+
+    text = soup.get_text(" ", strip=True)
+    return text
 
 
 def detect_sale(text: str, keywords: List[str]) -> Tuple[bool, Optional[str]]:
-    upper = text.upper()
-    for k in keywords:
-        if str(k).upper() in upper:
-            return True, str(k)
+    # return (is_sale, matched_keyword)
+    for kw in keywords:
+        if not kw:
+            continue
+        if kw in text or kw.lower() in text.lower():
+            return True, kw
     return False, None
 
 
-def detect_members_only(text: str) -> bool:
-    for pat in MEMBERS_PATTERNS:
-        if re.search(pat, text, flags=re.IGNORECASE):
-            return True
-    return False
-
-
-def detect_sale_type(text: str) -> Optional[str]:
-    upper = text.upper()
-    for sale_type, keys in SALE_TYPE_RULES:
-        for k in keys:
-            if k.upper() in upper:
-                return sale_type
-    return None
-
-
 def extract_up_to_discount(text: str) -> Optional[int]:
-    nums = []
+    nums: List[int] = []
 
-    # 1) 확실한 패턴 우선
     for pat in UPTO_PATTERNS:
         for m in re.finditer(pat, text, flags=re.IGNORECASE):
             try:
@@ -115,134 +108,78 @@ def extract_up_to_discount(text: str) -> Optional[int]:
         if 5 <= v <= 95:
             return v
 
-    # 2) fallback: 그냥 '숫자%' 전부 긁기 (10%~50% 탭 대응)
-    percent_hits = []
+    # fallback: any "NN%" occurrences (10/20/30/40/50 tabs etc.)
+    hits: List[int] = []
     for m in re.finditer(r"(?<!\d)(\d{1,2})\s*%", text):
         try:
             v = int(m.group(1))
             if 5 <= v <= 95:
-                percent_hits.append(v)
+                hits.append(v)
         except Exception:
             pass
 
-    return max(percent_hits) if percent_hits else None
+    return max(hits) if hits else None
 
 
-
-def keywords_from_brand(b: Dict[str, Any]) -> List[str]:
-    """
-    구형 config 지원:
-      signals:
-        - type: "keyword"
-          any: [...]
-    신형 config 지원:
-      extra_keywords: [...]
-    공통 키워드는 항상 포함
-    """
-    kw = list(COMMON_SALE_KEYWORDS)
-
-    # 구형: signals
-    if isinstance(b.get("signals"), list) and b.get("signals"):
-        first = b["signals"][0]
-        any_list = first.get("any") if isinstance(first, dict) else None
-        if isinstance(any_list, list):
-            kw.extend([str(x) for x in any_list])
-
-    # 신형: extra_keywords
-    extra = b.get("extra_keywords", [])
-    if isinstance(extra, list):
-        kw.extend([str(x) for x in extra])
-
-    # 중복 제거(순서 유지)
-    seen = set()
-    uniq = []
-    for x in kw:
-        if x not in seen:
-            uniq.append(x)
-            seen.add(x)
-    return uniq
+def infer_members_only(text: str) -> bool:
+    return any(k in text.lower() for k in ["members only", "회원", "회원공개", "로그인", "login"])
 
 
 def main() -> None:
-    brands = load_brands()
-    results = []
+    brands = load_brands_csv(ROOT / "brands.csv")
+    now = datetime.now(timezone.utc).isoformat()
+
+    out: List[Dict[str, Any]] = []
 
     for b in brands:
-        name = b.get("name")
-        url = b.get("url")
-
-        if not name or not url:
-            results.append({
-                "brand": name or "(missing name)",
-                "url": url or "(missing url)",
-                "status": "error",
-                "sale_type": None,
-                "matched_keyword": None,
-                "members_only": None,
-                "max_discount_hint": None,
-                "checked_at": now_iso(),
-                "error": "config missing name or url",
-            })
-            continue
-
-        print("CHECKING:", name)
+        # keywords = default + extra (split by |)
+        extra = [x.strip() for x in b.keywords_extra.split("|") if x.strip()] if b.keywords_extra else []
+        keywords = list(dict.fromkeys(DEFAULT_KEYWORDS + extra))  # unique preserve order
 
         try:
-            html = fetch_html(url)
-            text = extract_text(html)
-
-            kw = keywords_from_brand(b)
-            is_sale, matched_kw = detect_sale(text, kw)
-            status = "sale" if is_sale else "no_sale"
-
-            members_only = detect_members_only(text)
-            auto_type = detect_sale_type(text)
-
-            hint = b.get("sale_type_hint")
-            if status == "sale" and hint:
-                sale_type = hint
-            else:
-                sale_type = auto_type if status == "sale" else None
-
-            max_discount_hint = extract_up_to_discount(text)
-
-            results.append({
-                "brand": name,
-                "country": "KR",
-                "url": url,
-                "status": status,
-                "sale_type": sale_type,
-                "matched_keyword": matched_kw,
-                "members_only": bool(members_only),
-                "max_discount_hint": max_discount_hint,
-                "checked_at": now_iso(),
-            })
-
-            time.sleep(1)
-
+            text = fetch_text(b.url)
+            is_sale, matched = detect_sale(text, keywords)
+            members = infer_members_only(text)
+            max_disc = extract_up_to_discount(text)
         except Exception as e:
-            print("[ERROR] {}: {}".format(name, e))
-            results.append({
-                "brand": name,
-                "country": "KR",
-                "url": url,
-                "status": "error",
-                "sale_type": None,
-                "matched_keyword": None,
-                "members_only": None,
-                "max_discount_hint": None,
-                "checked_at": now_iso(),
-                "error": str(e),
-            })
+            out.append(
+                {
+                    "brand": b.name,
+                    "url": b.url,
+                    "country": b.country,
+                    "status": "error",
+                    "error": str(e),
+                    "sale_type": b.sale_type_hint or None,
+                    "matched_keyword": None,
+                    "members_only": False,
+                    "max_discount_hint": None,
+                    "checked_at": now,
+                }
+            )
+            continue
 
-    (OUT_DIR / "sales.json").write_text(
-        json.dumps(results, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+        out.append(
+            {
+                "brand": b.name,
+                "url": b.url,
+                "country": b.country,
+                "status": "sale" if is_sale else "no_sale",
+                "sale_type": b.sale_type_hint or None,
+                "matched_keyword": matched,
+                "members_only": bool(members),
+                "max_discount_hint": max_disc,
+                "checked_at": now,
+            }
+        )
+
+    with OUT_JSON.open("w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
 
     print("✅ Done. outputs/sales.json 생성됨")
 
 
 if __name__ == "__main__":
-    main()
-
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit(130)
