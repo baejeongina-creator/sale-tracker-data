@@ -1,19 +1,98 @@
 brands:
   - name: SINOON
     url: "https://sinoon.co.kr/product/list.html?cate_no=655"
+    signals:
+      - type: "keyword"
+        any: ["SALE", "세일", "SEASON", "OFF", "%", "할인", "원"]
 
   - name: ASURA
     url: "https://s2asuras2.com/59"
-    extra_keywords: ["MEMBERS ONLY", "회원", "회원공개"]
+    signals:
+      - type: "keyword"
+        any: ["SEASON OFF", "SALE", "UP TO", "%", "1+1", "EVENT", "MEMBERS ONLY", "회원", "회원공개"]
 
   - name: PLZ PROJECT
     url: "https://plzproject.kr/product/list.html?cate_no=309"
+    signals:
+      - type: "keyword"
+        any: ["SALE", "SEASON", "%", "할인", "원", "OFF"]
+    sale_type_hint: "season_off"
 
   - name: KHAKI POINT
-    url: "https://khakipoint.kr/product/list.html?cate_no=156"
-    extra_keywords: ["CLEARANCE", "클리어런스"]
+    url: "https://khakipoint.kr/product/list.html?cate_no=79"
+    signals:
+      - type: "keyword"
+        any: ["CLEARANCE", "클리어런스", "%", "OFF", "할인"]
+    sale_type_hint: "clearance"
 
   - name: NOT YOUR ROSE
     url: "https://notyourrose.com/product/list.html?cate_no=210"
-    extra_keywords: ["REFURB", "리퍼브", "B-GRADE"]
+    signals:
+      - type: "keyword"
+        any: ["REFURB", "리퍼브", "B-GRADE", "아울렛", "%", "OFF"]
+    sale_type_hint: "refurb"
 
+  # ✅ 추가로 바로 넣기 좋은 애들 (세일/클리어런스 URL 확실)
+
+  - name: LEBANE
+    url: "https://www.lebane.kr/product/list.html?cate_no=164"
+    signals:
+      - type: "keyword"
+        any: ["CLEARANCE", "CLEARANCE SALE", "Refurb", "REFURB", "리퍼브", "%", "OFF", "할인"]
+    sale_type_hint: "clearance"
+
+  - name: MARGESHERWOOD
+    url: "https://margesherwood.com/product/list.html?cate_no=140"
+    signals:
+      - type: "keyword"
+        any: ["ARCHIVE SALE", "SALE", "%", "OFF", "할인"]
+    sale_type_hint: "season_off"
+
+  - name: SCULPTOR
+    url: "https://sculptorpage.com/category/season-off/1335/"
+    signals:
+      - type: "keyword"
+        any: ["SEASON OFF", "SALE", "%", "OFF", "할인"]
+    sale_type_hint: "season_off"
+
+  - name: NOTHING WRITTEN
+    url: "https://nothing-written.com/category/50-off/230/"
+    signals:
+      - type: "keyword"
+        any: ["OFF", "%", "SALE", "할인"]
+    sale_type_hint: "season_off"
+
+  - name: SIENNE
+    url: "https://sienne.co.kr/category/season-off/102/"
+    signals:
+      - type: "keyword"
+        any: ["SEASON OFF", "SALE", "%", "OFF", "할인"]
+    sale_type_hint: "season_off"
+
+  - name: OPEN YY
+    url: "https://openyy.com/category/sale/93/"
+    signals:
+      - type: "keyword"
+        any: ["SALE", "%", "OFF", "할인"]
+    sale_type_hint: "season_off"
+
+  - name: DUNST
+    url: "https://dunststore.com/category/sale/52/"
+    signals:
+      - type: "keyword"
+        any: ["SALE", "%", "OFF", "할인"]
+    sale_type_hint: "season_off"
+
+  - name: BOHEMIAN SEOUL
+    url: "https://bohemseo.com/category/60-80/128/"
+    signals:
+      - type: "keyword"
+        any: ["%", "OFF", "SALE", "할인"]
+    sale_type_hint: "season_off"
+
+  - name: SIYAZU
+    url: "https://siyazu.co.kr/category/new-year-sale/249/"
+    signals:
+      - type: "keyword"
+        any: ["SALE", "%", "OFF", "할인", "세일"]
+    sale_type_hint: "season_off"

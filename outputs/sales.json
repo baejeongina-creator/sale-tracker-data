@@ -8,7 +8,7 @@
     "matched_keyword": "SEASON",
     "members_only": true,
     "max_discount_hint": 70,
-    "checked_at": "2026-01-22T19:12:37.990041+00:00"
+    "checked_at": "2026-01-22T19:18:00.211124+00:00"
   },
   {
     "brand": "ASURA",
@@ -19,7 +19,7 @@
     "matched_keyword": "SEASON",
     "members_only": true,
     "max_discount_hint": 90,
-    "checked_at": "2026-01-22T19:12:37.990041+00:00"
+    "checked_at": "2026-01-22T19:18:00.211124+00:00"
   },
   {
     "brand": "PLZ PROJECT",
@@ -30,7 +30,7 @@
     "matched_keyword": "SALE",
     "members_only": true,
     "max_discount_hint": 70,
-    "checked_at": "2026-01-22T19:12:37.990041+00:00"
+    "checked_at": "2026-01-22T19:18:00.211124+00:00"
   },
   {
     "brand": "KHAKI POINT",
@@ -41,7 +41,7 @@
     "matched_keyword": "SALE",
     "members_only": true,
     "max_discount_hint": 50,
-    "checked_at": "2026-01-22T19:12:37.990041+00:00"
+    "checked_at": "2026-01-22T19:18:00.211124+00:00"
   },
   {
     "brand": "NOT YOUR ROSE",
@@ -52,7 +52,7 @@
     "matched_keyword": "SALE",
     "members_only": true,
     "max_discount_hint": 30,
-    "checked_at": "2026-01-22T19:12:37.990041+00:00"
+    "checked_at": "2026-01-22T19:18:00.211124+00:00"
   },
   {
     "brand": "WELLBEING EXPRESS",
@@ -63,7 +63,7 @@
     "matched_keyword": null,
     "members_only": false,
     "max_discount_hint": null,
-    "checked_at": "2026-01-22T19:12:37.990041+00:00"
+    "checked_at": "2026-01-22T19:18:00.211124+00:00"
   },
   {
     "brand": "SUNBURN PROJECT",
@@ -74,6 +74,6 @@
     "matched_keyword": "OFF",
     "members_only": true,
     "max_discount_hint": 70,
-    "checked_at": "2026-01-22T19:12:37.990041+00:00"
+    "checked_at": "2026-01-22T19:18:00.211124+00:00"
   }
 ]
