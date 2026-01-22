@@ -1,0 +1,19 @@
+brands:
+  - name: SINOON
+    url: "https://sinoon.co.kr/product/list.html?cate_no=655"
+
+  - name: ASURA
+    url: "https://s2asuras2.com/59"
+    extra_keywords: ["MEMBERS ONLY", "회원", "회원공개"]
+
+  - name: PLZ PROJECT
+    url: "https://plzproject.kr/product/list.html?cate_no=309"
+
+  - name: KHAKI POINT
+    url: "https://khakipoint.kr/product/list.html?cate_no=156"
+    extra_keywords: ["CLEARANCE", "클리어런스"]
+
+  - name: NOT YOUR ROSE
+    url: "https://notyourrose.com/product/list.html?cate_no=210"
+    extra_keywords: ["REFURB", "리퍼브", "B-GRADE"]
+

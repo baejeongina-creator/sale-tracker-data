@@ -101,13 +101,32 @@ def detect_sale_type(text: str) -> Optional[str]:
 
 def extract_up_to_discount(text: str) -> Optional[int]:
     nums = []
+
+    # 1) 확실한 패턴 우선
     for pat in UPTO_PATTERNS:
         for m in re.finditer(pat, text, flags=re.IGNORECASE):
             try:
                 nums.append(int(m.group(1)))
             except Exception:
                 pass
-    return max(nums) if nums else None
+
+    if nums:
+        v = max(nums)
+        if 5 <= v <= 95:
+            return v
+
+    # 2) fallback: 그냥 '숫자%' 전부 긁기 (10%~50% 탭 대응)
+    percent_hits = []
+    for m in re.finditer(r"(?<!\d)(\d{1,2})\s*%", text):
+        try:
+            v = int(m.group(1))
+            if 5 <= v <= 95:
+                percent_hits.append(v)
+        except Exception:
+            pass
+
+    return max(percent_hits) if percent_hits else None
+
 
 
 def keywords_from_brand(b: Dict[str, Any]) -> List[str]:
