@@ -4,22 +4,22 @@
     "url": "https://sinoon.co.kr/product/list.html?cate_no=655",
     "country": "KR",
     "status": "sale",
-    "sale_type": null,
-    "matched_keyword": "SEASON",
-    "members_only": false,
+    "sale_type": "season_off",
+    "matched_keyword": "OFF",
+    "members_only": true,
     "max_discount_hint": 70,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "ASURA",
     "url": "https://s2asuras2.com/59",
     "country": "KR",
     "status": "sale",
-    "sale_type": null,
-    "matched_keyword": "SEASON OFF",
+    "sale_type": "members_only",
+    "matched_keyword": "OFF",
     "members_only": true,
     "max_discount_hint": 90,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "PLZ PROJECT",
@@ -28,20 +28,20 @@
     "status": "sale",
     "sale_type": "season_off",
     "matched_keyword": "SALE",
-    "members_only": false,
+    "members_only": true,
     "max_discount_hint": 70,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "KHAKI POINT",
-    "url": "https://khakipoint.kr/product/list.html?cate_no=79",
+    "url": "https://khakipoint.kr/product/list.html?cate_no=156",
     "country": "KR",
     "status": "sale",
     "sale_type": "clearance",
-    "matched_keyword": "CLEARANCE",
-    "members_only": false,
-    "max_discount_hint": null,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "matched_keyword": "SALE",
+    "members_only": true,
+    "max_discount_hint": 50,
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "NOT YOUR ROSE",
@@ -49,10 +49,32 @@
     "country": "KR",
     "status": "sale",
     "sale_type": "refurb",
-    "matched_keyword": "REFURB",
+    "matched_keyword": "SALE",
     "members_only": true,
     "max_discount_hint": 30,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
+  },
+  {
+    "brand": "WELLBEING EXPRESS",
+    "url": "https://wellbeingexpress.com/collections/all",
+    "country": "KR",
+    "status": "no_sale",
+    "sale_type": null,
+    "matched_keyword": null,
+    "members_only": false,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
+  },
+  {
+    "brand": "SUNBURN PROJECT",
+    "url": "https://sunburnproject.com/product/list.html?cate_no=124",
+    "country": "KR",
+    "status": "sale",
+    "sale_type": "clearance",
+    "matched_keyword": "할인",
+    "members_only": true,
+    "max_discount_hint": 70,
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "LEBANE",
@@ -60,10 +82,10 @@
     "country": "KR",
     "status": "sale",
     "sale_type": "clearance",
-    "matched_keyword": "CLEARANCE",
-    "members_only": false,
+    "matched_keyword": "SALE",
+    "members_only": true,
     "max_discount_hint": 60,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "MARGESHERWOOD",
@@ -74,7 +96,7 @@
     "matched_keyword": null,
     "members_only": false,
     "max_discount_hint": null,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "SCULPTOR",
@@ -85,7 +107,7 @@
     "matched_keyword": null,
     "members_only": false,
     "max_discount_hint": null,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "NOTHING WRITTEN",
@@ -94,21 +116,9 @@
     "status": "sale",
     "sale_type": "season_off",
     "matched_keyword": "OFF",
-    "members_only": false,
+    "members_only": true,
     "max_discount_hint": 50,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
-  },
-  {
-    "brand": "SIENNE",
-    "url": "https://sienne.co.kr/category/season-off/102/",
-    "country": "KR",
-    "status": "error",
-    "error": "HTTPSConnectionPool(host='sienne.co.kr', port=443): Max retries exceeded with url: /category/season-off/102/ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f9b004504f0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))",
-    "sale_type": "season_off",
-    "matched_keyword": null,
-    "members_only": false,
-    "max_discount_hint": null,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "OPEN YY",
@@ -119,19 +129,19 @@
     "matched_keyword": null,
     "members_only": false,
     "max_discount_hint": null,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "DUNST",
     "url": "https://dunststore.com/category/sale/52/",
     "country": "KR",
     "status": "error",
-    "error": "HTTPSConnectionPool(host='dunststore.com', port=443): Max retries exceeded with url: /category/sale/52/ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f9ae008b1c0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))",
+    "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>",
     "sale_type": "season_off",
     "matched_keyword": null,
     "members_only": false,
     "max_discount_hint": null,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "BOHEMIAN SEOUL",
@@ -139,21 +149,21 @@
     "country": "KR",
     "status": "sale",
     "sale_type": "season_off",
-    "matched_keyword": "%",
-    "members_only": false,
+    "matched_keyword": "SALE",
+    "members_only": true,
     "max_discount_hint": 80,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   },
   {
     "brand": "SIYAZU",
     "url": "https://siyazu.co.kr/category/new-year-sale/249/",
     "country": "KR",
     "status": "error",
-    "error": "404 Client Error: Not Found for url: https://siyazu.co.kr/category/new-year-sale/249/",
+    "error": "HTTP Error 404: Not Found",
     "sale_type": "season_off",
     "matched_keyword": null,
     "members_only": false,
     "max_discount_hint": null,
-    "checked_at": "2026-01-23T05:42:31.065974+00:00"
+    "checked_at": "2026-01-23T06:09:35.993668+00:00"
   }
 ]
