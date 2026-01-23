@@ -195,11 +195,13 @@ def load_from_brands_csv(path: Path) -> List[Dict[str, Any]]:
 def main() -> None:
     now = datetime.now(timezone.utc).isoformat()
 
-    # ✅ config.yaml 우선 (네가 붙여넣은 거 먹게)
-    brands = load_from_config_yaml(ROOT / "config.yaml")
-    if brands is None:
-        # 없으면 csv fallback
-        brands = load_from_brands_csv(ROOT / "brands.csv")
+    # ✅ brands.csv 우선 (엑셀 관리)
+brands = load_from_brands_csv(ROOT / "brands.csv")
+
+# fallback: csv가 비어있을 때만 config.yaml 사용(원하면 이 줄 통째로 삭제해도 됨)
+if not brands:
+    brands = load_from_config_yaml(ROOT / "config.yaml") or []
+
 
     if not brands:
         raise RuntimeError("No brands found. Add brands to config.yaml (brands:) or brands.csv")

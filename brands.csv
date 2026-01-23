@@ -1,8 +1,16 @@
-name,url,country,sale_type_hint,keywords_extra
-SINOON,https://sinoon.co.kr/product/list.html?cate_no=655,KR,,
-ASURA,https://s2asuras2.com/59,KR,members_only,"MEMBERS ONLY|회원|회원공개|UP TO|SALE|%|EVENT"
-PLZ PROJECT,https://plzproject.kr/product/list.html?cate_no=309,KR,season_off,
-KHAKI POINT,https://khakipoint.kr/product/list.html?cate_no=156,KR,clearance,"10%|20%|30%|40%|50%|CLEARANCE|클리어런스"
-NOT YOUR ROSE,https://notyourrose.com/product/list.html?cate_no=210,KR,refurb,"REFURB|리퍼브|B-GRADE|아울렛"
-WELLBEING EXPRESS,https://wellbeingexpress.com/collections/all,KR,,
-SUNBURN PROJECT,https://sunburnproject.com/product/list.html?cate_no=124,KR,,
+name,country,url,sale_type_hint,keywords_extra
+SINOON,KR,https://sinoon.co.kr/product/list.html?cate_no=655,,
+ASURA,KR,https://s2asuras2.com/59,members_only,"MEMBERS ONLY|회원|회원공개|UP TO|SALE|%|EVENT"
+PLZ PROJECT,KR,https://plzproject.kr/product/list.html?cate_no=309,season_off,
+KHAKI POINT,KR,https://khakipoint.kr/product/list.html?cate_no=156,clearance,"10%|20%|30%|40%|50%|CLEARANCE|클리어런스"
+NOT YOUR ROSE,KR,https://notyourrose.com/product/list.html?cate_no=210,refurb,"REFURB|리퍼브|B-GRADE|B GRADE|아울렛"
+WELLBEING EXPRESS,KR,https://wellbeingexpress.com/collections/all,,
+SUNBURN PROJECT,KR,https://sunburnproject.com/product/list.html?cate_no=124,,
+LEBANE,KR,https://www.lebane.kr/product/list.html?cate_no=164,clearance,"CLEARANCE|REFURB|리퍼브|%|OFF|할인|SALE"
+MARGESHERWOOD,KR,https://margesherwood.com/product/list.html?cate_no=140,season_off,"ARCHIVE SALE|SALE|%|OFF|할인"
+SCULPTOR,KR,https://sculptorpage.com/category/season-off/1335/,season_off,
+NOTHING WRITTEN,KR,https://nothing-written.com/category/50-off/230/,season_off,
+OPEN YY,KR,https://openyy.com/category/sale/93/,season_off,
+DUNST,KR,https://dunststore.com/category/sale/52/,season_off,
+BOHEMIAN SEOUL,KR,https://bohemseo.com/category/60-80/128/,season_off,
+SIYAZU,KR,https://siyazu.co.kr/category/new-year-sale/249/,season_off,
