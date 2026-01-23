@@ -6,20 +6,20 @@
     "status": "sale",
     "sale_type": null,
     "matched_keyword": "SEASON",
-    "members_only": true,
+    "members_only": false,
     "max_discount_hint": 70,
-    "checked_at": "2026-01-22T19:18:00.211124+00:00"
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
   },
   {
     "brand": "ASURA",
     "url": "https://s2asuras2.com/59",
     "country": "KR",
     "status": "sale",
-    "sale_type": "members_only",
-    "matched_keyword": "SEASON",
+    "sale_type": null,
+    "matched_keyword": "SEASON OFF",
     "members_only": true,
     "max_discount_hint": 90,
-    "checked_at": "2026-01-22T19:18:00.211124+00:00"
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
   },
   {
     "brand": "PLZ PROJECT",
@@ -28,20 +28,20 @@
     "status": "sale",
     "sale_type": "season_off",
     "matched_keyword": "SALE",
-    "members_only": true,
+    "members_only": false,
     "max_discount_hint": 70,
-    "checked_at": "2026-01-22T19:18:00.211124+00:00"
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
   },
   {
     "brand": "KHAKI POINT",
-    "url": "https://khakipoint.kr/product/list.html?cate_no=156",
+    "url": "https://khakipoint.kr/product/list.html?cate_no=79",
     "country": "KR",
     "status": "sale",
     "sale_type": "clearance",
-    "matched_keyword": "SALE",
-    "members_only": true,
-    "max_discount_hint": 50,
-    "checked_at": "2026-01-22T19:18:00.211124+00:00"
+    "matched_keyword": "CLEARANCE",
+    "members_only": false,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
   },
   {
     "brand": "NOT YOUR ROSE",
@@ -49,31 +49,111 @@
     "country": "KR",
     "status": "sale",
     "sale_type": "refurb",
-    "matched_keyword": "SALE",
+    "matched_keyword": "REFURB",
     "members_only": true,
     "max_discount_hint": 30,
-    "checked_at": "2026-01-22T19:18:00.211124+00:00"
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
   },
   {
-    "brand": "WELLBEING EXPRESS",
-    "url": "https://wellbeingexpress.com/collections/all",
+    "brand": "LEBANE",
+    "url": "https://www.lebane.kr/product/list.html?cate_no=164",
+    "country": "KR",
+    "status": "sale",
+    "sale_type": "clearance",
+    "matched_keyword": "CLEARANCE",
+    "members_only": false,
+    "max_discount_hint": 60,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
+  },
+  {
+    "brand": "MARGESHERWOOD",
+    "url": "https://margesherwood.com/product/list.html?cate_no=140",
     "country": "KR",
     "status": "no_sale",
-    "sale_type": null,
+    "sale_type": "season_off",
     "matched_keyword": null,
     "members_only": false,
     "max_discount_hint": null,
-    "checked_at": "2026-01-22T19:18:00.211124+00:00"
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
   },
   {
-    "brand": "SUNBURN PROJECT",
-    "url": "https://sunburnproject.com/product/list.html?cate_no=124",
+    "brand": "SCULPTOR",
+    "url": "https://sculptorpage.com/category/season-off/1335/",
+    "country": "KR",
+    "status": "no_sale",
+    "sale_type": "season_off",
+    "matched_keyword": null,
+    "members_only": false,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
+  },
+  {
+    "brand": "NOTHING WRITTEN",
+    "url": "https://nothing-written.com/category/50-off/230/",
     "country": "KR",
     "status": "sale",
-    "sale_type": null,
+    "sale_type": "season_off",
     "matched_keyword": "OFF",
-    "members_only": true,
-    "max_discount_hint": 70,
-    "checked_at": "2026-01-22T19:18:00.211124+00:00"
+    "members_only": false,
+    "max_discount_hint": 50,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
+  },
+  {
+    "brand": "SIENNE",
+    "url": "https://sienne.co.kr/category/season-off/102/",
+    "country": "KR",
+    "status": "error",
+    "error": "HTTPSConnectionPool(host='sienne.co.kr', port=443): Max retries exceeded with url: /category/season-off/102/ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7fbf6857c640>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))",
+    "sale_type": "season_off",
+    "matched_keyword": null,
+    "members_only": false,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
+  },
+  {
+    "brand": "OPEN YY",
+    "url": "https://openyy.com/category/sale/93/",
+    "country": "KR",
+    "status": "no_sale",
+    "sale_type": "season_off",
+    "matched_keyword": null,
+    "members_only": false,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
+  },
+  {
+    "brand": "DUNST",
+    "url": "https://dunststore.com/category/sale/52/",
+    "country": "KR",
+    "status": "error",
+    "error": "HTTPSConnectionPool(host='dunststore.com', port=443): Max retries exceeded with url: /category/sale/52/ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7fbf480ca520>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))",
+    "sale_type": "season_off",
+    "matched_keyword": null,
+    "members_only": false,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
+  },
+  {
+    "brand": "BOHEMIAN SEOUL",
+    "url": "https://bohemseo.com/category/60-80/128/",
+    "country": "KR",
+    "status": "sale",
+    "sale_type": "season_off",
+    "matched_keyword": "%",
+    "members_only": false,
+    "max_discount_hint": 80,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
+  },
+  {
+    "brand": "SIYAZU",
+    "url": "https://siyazu.co.kr/category/new-year-sale/249/",
+    "country": "KR",
+    "status": "error",
+    "error": "404 Client Error: Not Found for url: https://siyazu.co.kr/category/new-year-sale/249/",
+    "sale_type": "season_off",
+    "matched_keyword": null,
+    "members_only": false,
+    "max_discount_hint": null,
+    "checked_at": "2026-01-23T05:38:07.695893+00:00"
   }
 ]
