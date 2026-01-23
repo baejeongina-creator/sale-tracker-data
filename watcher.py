@@ -5,7 +5,6 @@ import csv
 import json
 import os
 import re
-import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import List, Optional, Tuple, Dict, Any
@@ -24,7 +23,7 @@ OUT_JSON = os.path.join(OUT_DIR, "sales.json")
 # -----------------------------
 DEFAULT_KEYWORDS = ["SALE", "세일", "할인", "OFF", "%", "UP TO", "EVENT", "프로모션", "특가"]
 
-# "회원 전용" 감지용 키워드 (너무 공격적으로 true 되면 여기서 빼면 됨)
+# "회원 전용" 감지용 키워드 (오탐 줄이려고 강한 신호만)
 MEMBERS_ONLY_KEYWORDS = [
     "MEMBERS ONLY",
     "MEMBER ONLY",
@@ -34,7 +33,6 @@ MEMBERS_ONLY_KEYWORDS = [
     "LOGIN",
     "SIGN IN",
 ]
-
 
 # sale_type 자동 추론용 키워드
 SALE_TYPE_RULES = [
@@ -59,8 +57,7 @@ class Brand:
     url: str
     sale_type_hint: Optional[str]
     keywords_extra: List[str]
-    image: Optional[str]
-
+    image: Optional[str]  # ✅ CSV 수동 이미지 (없으면 자동 추출)
 
 
 # -----------------------------
@@ -82,7 +79,7 @@ def fetch_html(url: str, timeout: int = 20) -> str:
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = resp.read()
-        # best-effort decode
+
         for enc in ("utf-8", "euc-kr", "cp949", "latin-1"):
             try:
                 return data.decode(enc)
@@ -95,7 +92,6 @@ def fetch_html(url: str, timeout: int = 20) -> str:
 # Parsing / detection
 # -----------------------------
 def normalize_text(html: str) -> str:
-    # tag 제거(간단 버전)
     text = re.sub(r"<script[\s\S]*?</script>", " ", html, flags=re.I)
     text = re.sub(r"<style[\s\S]*?</style>", " ", text, flags=re.I)
     text = re.sub(r"<[^>]+>", " ", text)
@@ -108,7 +104,6 @@ def detect_sale(text: str, keywords: List[str]) -> Tuple[bool, Optional[str]]:
     for kw in keywords:
         if not kw:
             continue
-        # 영어 키워드는 대문자 비교, 한글은 그대로 포함 체크
         if re.search(r"[A-Z]", kw):
             if kw.upper() in upper:
                 return True, kw
@@ -146,26 +141,18 @@ def infer_sale_type(text: str, hint: Optional[str]) -> Optional[str]:
 
 
 def extract_max_discount(text: str) -> Optional[int]:
-    """
-    예:
-    - "UP TO 50%" -> 50
-    - "최대 70%" -> 70
-    - "10% 20% 30% 40% 50%" -> 50
-    - "60-80%" -> 80
-    """
     upper = text.upper()
 
-    # "UP TO 50" / "UP TO 50%"
-    m = re.findall(r"UP\s*TO\s*(\d{1,3})\s*%?", upper)
-    nums = [int(x) for x in m if x.isdigit()]
+    nums: List[int] = []
 
-    # "최대 70%" / "MAX 70%"
+    m = re.findall(r"UP\s*TO\s*(\d{1,3})\s*%?", upper)
+    nums += [int(x) for x in m if x.isdigit()]
+
     m2 = re.findall(r"(최대|MAX)\s*(\d{1,3})\s*%?", upper)
     for _, n in m2:
         if n.isdigit():
             nums.append(int(n))
 
-    # "60-80%" 형태
     m3 = re.findall(r"(\d{1,3})\s*-\s*(\d{1,3})\s*%", upper)
     for a, b in m3:
         if a.isdigit():
@@ -173,15 +160,56 @@ def extract_max_discount(text: str) -> Optional[int]:
         if b.isdigit():
             nums.append(int(b))
 
-    # 일반 "%": 10%, 20%... 다 긁어서 최대값
     m4 = re.findall(r"(\d{1,3})\s*%", upper)
     for n in m4:
         if n.isdigit():
             nums.append(int(n))
 
-    # sanity
     nums = [n for n in nums if 1 <= n <= 95]
     return max(nums) if nums else None
+
+
+# -----------------------------
+# Auto image extraction (og:image etc.)
+# -----------------------------
+def resolve_url(base: str, maybe: str) -> str:
+    try:
+        from urllib.parse import urljoin
+        return urljoin(base, maybe)
+    except Exception:
+        return maybe
+
+
+def extract_auto_image(html: str, page_url: str) -> Optional[str]:
+    # og:image
+    m = re.search(
+        r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']',
+        html,
+        flags=re.I,
+    )
+    if m:
+        return resolve_url(page_url, m.group(1).strip())
+
+    # twitter:image
+    m = re.search(
+        r'<meta[^>]+name=["\']twitter:image["\'][^>]+content=["\']([^"\']+)["\']',
+        html,
+        flags=re.I,
+    )
+    if m:
+        return resolve_url(page_url, m.group(1).strip())
+
+    # fallback: 첫 번째 일반 이미지
+    imgs = re.findall(r'<img[^>]+src=["\']([^"\']+)["\']', html, flags=re.I)
+    for src in imgs[:60]:
+        s = src.lower()
+        if any(x in s for x in ["logo", "icon", "sprite", "blank", "loading", "common"]):
+            continue
+        if not any(ext in s for ext in [".jpg", ".jpeg", ".png", ".webp"]):
+            continue
+        return resolve_url(page_url, src.strip())
+
+    return None
 
 
 # -----------------------------
@@ -194,10 +222,14 @@ def load_brands_from_csv(path: str) -> List[Brand]:
 
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
+
+        # ✅ image 컬럼까지 포함 (비어있어도 OK)
         required = ["name", "country", "url", "sale_type_hint", "keywords_extra", "image"]
         for rname in required:
-            if rname not in reader.fieldnames:
-                raise ValueError(f"brands.csv 헤더에 '{rname}' 컬럼이 필요해. 현재: {reader.fieldnames}")
+            if rname not in (reader.fieldnames or []):
+                raise ValueError(
+                    f"brands.csv 헤더에 '{rname}' 컬럼이 필요해. 현재: {reader.fieldnames}"
+                )
 
         for row in reader:
             name = (row.get("name") or "").strip()
@@ -205,31 +237,27 @@ def load_brands_from_csv(path: str) -> List[Brand]:
             url = (row.get("url") or "").strip()
             sale_type_hint = (row.get("sale_type_hint") or "").strip() or None
             keywords_extra_raw = (row.get("keywords_extra") or "").strip()
-image = (row.get("image") or "").strip() or None
-
+            image = (row.get("image") or "").strip() or None
 
             if not name:
                 continue
             if not url:
-                # URL 없는 애들도 엑셀에 둘 수 있는데, watcher는 스킵
                 continue
 
-            extra = []
+            extra: List[str] = []
             if keywords_extra_raw:
-                # 파이프(|) 기준
                 extra = [x.strip() for x in keywords_extra_raw.split("|") if x.strip()]
 
             brands.append(
-    Brand(
-        name=name,
-        country=country,
-        url=url,
-        sale_type_hint=sale_type_hint,
-        keywords_extra=extra,
-        image=image,
-    )
-)
-
+                Brand(
+                    name=name,
+                    country=country,
+                    url=url,
+                    sale_type_hint=sale_type_hint,
+                    keywords_extra=extra,
+                    image=image,
+                )
+            )
 
     return brands
 
@@ -255,7 +283,6 @@ def load_brands_from_yaml(path: str) -> List[Brand]:
         country = (b.get("country") or "KR").strip()
         sale_type_hint = (b.get("sale_type_hint") or None)
 
-        # 기존 구조: signals[0].any
         keywords_extra: List[str] = []
         signals = b.get("signals") or []
         if signals and isinstance(signals, list):
@@ -272,6 +299,7 @@ def load_brands_from_yaml(path: str) -> List[Brand]:
                     url=url,
                     sale_type_hint=sale_type_hint,
                     keywords_extra=keywords_extra,
+                    image=None,  # yaml엔 이미지 없음(원하면 나중에 추가 가능)
                 )
             )
 
@@ -313,11 +341,14 @@ def main() -> None:
             members_only = detect_members_only(text)
 
             sale_type = infer_sale_type(text, b.sale_type_hint)
-            # members_only가 true인데 sale_type이 비어있으면 members_only로 세팅 (원하면 이 줄 지워도 됨)
             if members_only and not sale_type:
                 sale_type = "members_only"
 
             max_discount = extract_max_discount(text)
+
+            # ✅ 이미지: CSV 수동 우선, 없으면 자동 추출
+            auto_image = extract_auto_image(html, b.url)
+            image_final = b.image or auto_image
 
             results.append(
                 {
@@ -330,8 +361,7 @@ def main() -> None:
                     "members_only": bool(members_only),
                     "max_discount_hint": max_discount,
                     "checked_at": checked_at,
-"image": b.image,
-
+                    "image": image_final,
                 }
             )
 
@@ -348,7 +378,7 @@ def main() -> None:
                     "members_only": False,
                     "max_discount_hint": None,
                     "checked_at": checked_at,
-"image": None,
+                    "image": None,
                 }
             )
 
