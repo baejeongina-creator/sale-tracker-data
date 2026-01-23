@@ -42,11 +42,15 @@ UPTO_PATTERNS = [
 
 MEMBERS_ONLY_PATTERNS = [
     r"members\s*only",
+    r"member\s*only",
     r"회원\s*전용",
     r"회원\s*공개",
-    r"로그인\s*후",
-    r"로그인\s*필요",
+    r"회원가",
+    r"회원\s*한정",
+    r"로그인\s*후\s*공개",
+    r"로그인\s*후\s*확인",
 ]
+
 
 
 def fetch_text(url: str) -> str:
@@ -103,6 +107,7 @@ def infer_members_only(text: str) -> bool:
         if re.search(pat, low, flags=re.IGNORECASE):
             return True
     return False
+
 
 
 def load_from_config_yaml(path: Path) -> Optional[List[Dict[str, Any]]]:
