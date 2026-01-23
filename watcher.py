@@ -28,16 +28,13 @@ DEFAULT_KEYWORDS = ["SALE", "세일", "할인", "OFF", "%", "UP TO", "EVENT", "�
 MEMBERS_ONLY_KEYWORDS = [
     "MEMBERS ONLY",
     "MEMBER ONLY",
-    "회원",
     "회원전용",
     "회원 전용",
     "회원공개",
-    "로그인",
     "LOGIN",
     "SIGN IN",
-    "가입",
-    "비회원",
 ]
+
 
 # sale_type 자동 추론용 키워드
 SALE_TYPE_RULES = [
@@ -62,6 +59,8 @@ class Brand:
     url: str
     sale_type_hint: Optional[str]
     keywords_extra: List[str]
+    image: Optional[str]
+
 
 
 # -----------------------------
@@ -195,7 +194,7 @@ def load_brands_from_csv(path: str) -> List[Brand]:
 
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
-        required = ["name", "country", "url", "sale_type_hint", "keywords_extra"]
+        required = ["name", "country", "url", "sale_type_hint", "keywords_extra", "image"]
         for rname in required:
             if rname not in reader.fieldnames:
                 raise ValueError(f"brands.csv 헤더에 '{rname}' 컬럼이 필요해. 현재: {reader.fieldnames}")
@@ -206,6 +205,8 @@ def load_brands_from_csv(path: str) -> List[Brand]:
             url = (row.get("url") or "").strip()
             sale_type_hint = (row.get("sale_type_hint") or "").strip() or None
             keywords_extra_raw = (row.get("keywords_extra") or "").strip()
+image = (row.get("image") or "").strip() or None
+
 
             if not name:
                 continue
@@ -219,14 +220,16 @@ def load_brands_from_csv(path: str) -> List[Brand]:
                 extra = [x.strip() for x in keywords_extra_raw.split("|") if x.strip()]
 
             brands.append(
-                Brand(
-                    name=name,
-                    country=country,
-                    url=url,
-                    sale_type_hint=sale_type_hint,
-                    keywords_extra=extra,
-                )
-            )
+    Brand(
+        name=name,
+        country=country,
+        url=url,
+        sale_type_hint=sale_type_hint,
+        keywords_extra=extra,
+        image=image,
+    )
+)
+
 
     return brands
 
@@ -327,6 +330,8 @@ def main() -> None:
                     "members_only": bool(members_only),
                     "max_discount_hint": max_discount,
                     "checked_at": checked_at,
+"image": b.image,
+
                 }
             )
 
@@ -343,6 +348,7 @@ def main() -> None:
                     "members_only": False,
                     "max_discount_hint": None,
                     "checked_at": checked_at,
+"image": None,
                 }
             )
 
